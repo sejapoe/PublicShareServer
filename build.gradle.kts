@@ -53,6 +53,7 @@ kotlin {
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react:18.2.0-pre.346")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:18.2.0-pre.346")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-emotion:11.9.3-pre.346")
+                implementation(npm("react-qr-code", "2.0.8"))
             }
         }
         val jsTest by getting
@@ -61,6 +62,7 @@ kotlin {
 
 application {
     mainClass.set("me.sejapoe.application.ServerKt")
+    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=true")
 }
 
 tasks.named<Copy>("jvmProcessResources") {
