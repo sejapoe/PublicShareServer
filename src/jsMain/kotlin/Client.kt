@@ -1,28 +1,30 @@
 import kotlinx.browser.document
-import kotlinx.browser.window
+import org.w3c.dom.WebSocket
 import react.create
 import react.dom.client.createRoot
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
-import kotlin.js.Promise
 
-suspend fun main() {
+fun main() {
     val container = document.createElement("div")
     document.body!!.appendChild(container)
 
-    val id = window.fetch("http://localhost:8080/startPending").then {
-        it.text()
-    }.then {
-        it
-    }.await()
+    val root = createRoot(container)
+    var id = ""
+    val webSocket = WebSocket("ws://localhost:8080/pending")
+    webSocket.onmessage = {
+        when (val data = it.data) {
+            "connected" -> {
+                root.render(Connection.create {
+                    this.id = id
+                    this.socket = WebSocket("ws://localhost:8080/connect/web/$id")
+                })
+            }
 
-    val welcome = Welcome.create {
-        this.id = id
+            is String -> {
+                id = data
+                root.render(Welcome.create() {
+                    this.id = data
+                })
+            }
+        }
     }
-    createRoot(container).render(welcome)
-}
-
-suspend fun <T> Promise<T>.await(): T = suspendCoroutine { cont ->
-    then({ cont.resume(it) }, { cont.resumeWithException(it) })
 }

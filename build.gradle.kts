@@ -43,6 +43,7 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-server-netty:2.0.2")
+                implementation("io.ktor:ktor-server-websockets:2.0.2")
                 implementation("io.ktor:ktor-server-html-builder-jvm:2.0.2")
                 implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.2")
             }
@@ -73,4 +74,8 @@ tasks.named<Copy>("jvmProcessResources") {
 tasks.named<JavaExec>("run") {
     dependsOn(tasks.named<Jar>("jvmJar"))
     classpath(tasks.named<Jar>("jvmJar"))
+}
+dependencies {
+    implementation("io.ktor:ktor-server-core-jvm:2.0.2")
+    implementation("io.ktor:ktor-server-websockets-jvm:2.0.2")
 }
